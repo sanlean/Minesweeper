@@ -40,8 +40,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build iOS
-        run: ./gradlew :ios:build
+      - name: Build iOS Frameworks
+        run: ./gradlew linkReleaseFrameworkIosArm64 linkReleaseFrameworkIosSimulatorArm64 linkReleaseFrameworkIosX64
 
   build-macos:
     runs-on: macos-latest
@@ -145,11 +145,14 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Install Chromium
         run: sudo apt-get update & sudo apt-get install -y chromium-browser
 
       - name: Build JS
-        run: ./gradlew :js:build
+        run: ./gradlew jsBrowserProductionWebpack
 
   build-jvm:
     runs-on: ubuntu-latest
@@ -163,5 +166,8 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build JVM
-        run: ./gradlew :jvm:build
+        run: ./gradlew jar
