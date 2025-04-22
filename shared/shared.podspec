@@ -1,10 +1,10 @@
 Pod::Spec.new do |spec|
     spec.name                     = 'shared'
-    spec.version                  = '0.0.1'
+    spec.version                  = '0.1.0'
     spec.homepage                 = 'https://github.com/sanlean/minesweeper'
     spec.source                   = { :http=> ''}
-    spec.authors                  = ''
-    spec.license                  = ''
+    spec.authors                  = 'Leandro Santana'
+    spec.license                  = 'The MIT License'
     spec.summary                  = 'Kotlin Multiplatform library for Minesweeper game engine.'
     spec.vendored_frameworks      = 'build/cocoapods/framework/minesweeper_core.framework'
     spec.libraries                = 'c++'
