@@ -1,0 +1,26 @@
+import kotlinx.datetime.LocalDateTime;
+
+CREATE TABLE HighScore (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    categoryId INTEGER NOT NULL REFERENCES Category(id),
+    time INTEGER NOT NULL,
+    date TEXT AS LocalDateTime NOT NULL,
+    name TEXT NOT NULL
+);
+
+CREATE INDEX HighScore_categoryId ON HighScore(categoryId);
+
+insert:
+INSERT INTO HighScore (categoryId, time, date, name) VALUES (?, ?, ?, ?);
+
+selectAll:
+SELECT * FROM HighScore;
+
+selectByCatagoryId:
+SELECT * FROM HighScore WHERE categoryId = ?;
+
+delete:
+DELETE FROM HighScore WHERE id = ?;
+
+deleteAll:
+DELETE FROM HighScore;

@@ -1,0 +1,21 @@
+CREATE TABLE Category (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    boardWidth INTEGER NOT NULL,
+    boardHeight INTEGER NOT NULL,
+    totalOfMines INTEGER NOT NULL
+);
+
+insert:
+INSERT INTO Category (boardWidth, boardHeight, totalOfMines) VALUES (?,?,?);
+
+selectAll:
+SELECT * FROM Category;
+
+selectByDimensions:
+SELECT * FROM Category WHERE boardWidth = ? AND boardHeight = ? AND totalOfMines = ?;
+
+delete:
+DELETE FROM Category WHERE id = ?;
+
+deleteAll:
+DELETE FROM Category;
