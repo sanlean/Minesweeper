@@ -1,5 +1,4 @@
 import com.vanniktech.maven.publish.SonatypeHost
-import org.jetbrains.kotlin.gradle.ExperimentalKotlinGradlePluginApi
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
@@ -28,7 +27,6 @@ kotlin {
     }
     androidTarget {
         publishLibraryVariants("release")
-        @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
             jvmTarget.set(JvmTarget.JVM_11)
         }
@@ -51,6 +49,8 @@ kotlin {
         summary = ConfigsConstants.projectDescription
         homepage = ConfigsConstants.scmUrl
         version = ConfigsConstants.version
+        authors = ConfigsConstants.author
+        license = ConfigsConstants.license
         ios.deploymentTarget = "16.0"
         framework {
             baseName = ConfigsConstants.project
@@ -63,10 +63,6 @@ kotlin {
             executionTask.configure {
                 useJUnitPlatform()
             }
-        }
-        dependencies {
-            implementation(libs.ktor.client.apache5)
-            implementation(libs.sqldelight.driver.jvm)
         }
     }
 
@@ -136,12 +132,15 @@ kotlin {
             implementation(libs.ktor.client.negotiation)
             implementation(libs.ktor.serialization.kotlinx)
             implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.coroutines.io)
             implementation(libs.kotlinx.datetime)
             implementation(libs.kotlinx.serialization.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.io.core)
             implementation(libs.kotlinx.collections.immutable)
             implementation(libs.sqldelight.runtime)
+            implementation(libs.sqldelight.coroutines.extensions)
+            implementation(libs.sqldelight.coroutines.primitive.adapters)
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -149,6 +148,7 @@ kotlin {
         }
         val commonMain by getting
         val jsMain by getting
+        val jvmMain by getting
         val iosSimulatorArm64Main by getting
         val iosArm64Main by getting
         val iosX64Main by getting
@@ -194,7 +194,12 @@ kotlin {
         }
         jsMain.dependencies {
             implementation(libs.sqldelight.driver.js.browser)
+            implementation(npm("sql.js", "1.6.2"))
             implementation(devNpm("copy-webpack-plugin", "9.1.0"))
+        }
+        jvmMain.dependencies {
+            implementation(libs.ktor.client.apache5)
+            implementation(libs.sqldelight.driver.jvm)
         }
     }
 }
@@ -243,7 +248,7 @@ mavenPublishing {
         url = ConfigsConstants.scmUrl
         licenses {
             license {
-                name = "The MIT License"
+                name = ConfigsConstants.license
                 url = "https://opensource.org/license/mit"
                 distribution = "repo"
             }
@@ -251,7 +256,7 @@ mavenPublishing {
         developers {
             developer {
                 id = "sanlean"
-                name = "Leandro Santana"
+                name = ConfigsConstants.author
                 url = "https://github.com/sanlean"
             }
         }
