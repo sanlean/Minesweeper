@@ -23,7 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Android
-        run: ./gradlew :android:assembleRelease
+        run: ./gradlew assemble
 
   build-ios:
     runs-on: macos-latest
@@ -70,8 +70,14 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Build Linux
-        run: ./gradlew :linux:build
+      - name: Build Linux x64
+        run: ./gradlew compileKotlinLinuxX64
+
+      - name: Link Linux x64
+        run: ./gradlew linkLinuxX64 && ./gradlew linkReleaseSharedLinuxX64
+
+      - name: Generate Linux x64 binaries
+        run: ./gradlew linuxX64Binaries
 
   build-windows:
     runs-on: windows-latest
