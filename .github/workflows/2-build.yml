@@ -23,7 +23,7 @@ jobs:
         run: chmod +x gradlew
 
       - name: Build Android
-        run: ./gradlew assemble
+        run: ./gradlew assembleDebug && ./gradlew assembleRelease
 
   build-ios:
     runs-on: macos-latest
@@ -55,8 +55,26 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Build macOS
-        run: ./gradlew :macos:build
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build MacOS x64
+        run: ./gradlew compileKotlinMacosX64
+
+      - name: Link MacOS x64
+        run: ./gradlew linkMacosX64 && ./gradlew linkDebugSharedMacosX64 && ./gradlew linkReleaseSharedMacosX64
+
+      - name: Generate MacOS x64 binaries
+        run: ./gradlew macosX64Binaries
+
+      - name: Build MacOS Arm64
+        run: ./gradlew compileKotlinMacosArm64
+
+      - name: Link MacOS Arm64
+        run: ./gradlew linkMacosArm64 && ./gradlew linkReleaseSharedMacosArm64
+
+      - name: Generate MacOS Arm64 binaries
+        run: ./gradlew macosArm64Binaries
 
   build-linux:
     runs-on: ubuntu-latest
@@ -82,6 +100,15 @@ jobs:
       - name: Generate Linux x64 binaries
         run: ./gradlew linuxX64Binaries
 
+      - name: Build Linux Arm64
+        run: ./gradlew compileKotlinLinuxArm64
+
+      - name: Link Linux Arm64
+        run: ./gradlew linkLinuxArm64 && ./gradlew linkReleaseSharedLinuxArm64
+
+      - name: Generate Linux Arm64 binaries
+        run: ./gradlew linuxArm64Binaries
+
   build-windows:
     runs-on: windows-latest
     steps:
@@ -94,8 +121,17 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
       - name: Build Windows
-        run: ./gradlew :windows:build
+        run: ./gradlew compileKotlinWindows
+
+      - name: Link Linux Windows
+        run: ./gradlew linkWindows && ./gradlew linkReleaseSharedWindows
+
+      - name: Generate Linux Windows binaries
+        run: ./gradlew windowsBinaries
 
   build-js:
     runs-on: ubuntu-latest
