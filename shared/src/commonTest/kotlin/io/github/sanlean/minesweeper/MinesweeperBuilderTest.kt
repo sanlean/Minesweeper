@@ -10,44 +10,41 @@ class MinesweeperBuilderTest {
 
     @Test
     fun `should build Minesweeper with valid dimensions mine count and random mine positions`() {
-        val builder = Minesweeper.Builder().apply {
-            width(20)
-            height(15)
-            totalOfMines(45)
-            randomMinesPositions()
-        }
+        val builder = Minesweeper.Builder()
+            .width(20)
+            .height(15)
+            .totalOfMines(45)
+            .randomMinesPositions()
         val minesweeper = builder.build()
         assertNotNull(minesweeper)
     }
 
     @Test
     fun `should throw InvalidMineCountException when mines list is empty`() {
-        val builder = Minesweeper.Builder().apply {
-            width(20)
-            height(15)
-            totalOfMines(45)
-        }
+        val builder = Minesweeper.Builder()
+            .width(20)
+            .height(15)
+            .totalOfMines(45)
         assertFailsWith<InvalidMineCountException> { builder.build() }
     }
 
     @Test
     fun `should throw InvalidMineCountException when totalOfMines does not match mines list size`() {
-        val builder = Minesweeper.Builder().apply {
-            width(20)
-            height(15)
-            totalOfMines(45)
-            minesPositions(listOf(Position(0, 0), Position(1, 1))) // Only 2 mines provided
-        }
+        val builder = Minesweeper.Builder()
+            .width(20)
+            .height(15)
+            .totalOfMines(45)
+            .minesPositions(listOf(Position(0, 0), Position(1, 1))) // Only 2 mines provided
         assertFailsWith<InvalidMineCountException> { builder.build() }
     }
 
     @Test
     fun `should build Minesweeper with manually set mine positions`() {
-        val builder = Minesweeper.Builder().apply {
-            width(10)
-            height(10)
-            totalOfMines(10)
-            minesPositions(
+        val builder = Minesweeper.Builder()
+            .width(10)
+            .height(10)
+            .totalOfMines(10)
+            .minesPositions(
                 listOf(
                     Position(0, 0),
                     Position(1, 1),
@@ -61,29 +58,27 @@ class MinesweeperBuilderTest {
                     Position(9, 9)
                 )
             )
-        }
         val minesweeper = builder.build()
         assertNotNull(minesweeper)
     }
 
     @Test
     fun `should throw InvalidMineCountException when randomMinesPositions generates incorrect count`() {
-        val builder = Minesweeper.Builder().apply {
-            width(10)
-            height(10)
-            totalOfMines(105)
-            randomMinesPositions()
-        }
+        val builder = Minesweeper.Builder()
+            .width(10)
+            .height(10)
+            .totalOfMines(105)
+            .randomMinesPositions()
         assertFailsWith<InvalidMineCountException> { builder.build() }
     }
 
     @Test
     fun `should throw InvalidMineCountException when totalOfMines is less than mines list size`() {
-        val builder = Minesweeper.Builder().apply {
-            width(10)
-            height(10)
-            totalOfMines(3) // Less than the size of the provided mines list
-            minesPositions(
+        val builder = Minesweeper.Builder()
+            .width(10)
+            .height(10)
+            .totalOfMines(3) // Less than the size of the provided mines list
+            .minesPositions(
                 listOf(
                     Position(0, 0),
                     Position(1, 1),
@@ -92,18 +87,16 @@ class MinesweeperBuilderTest {
                     Position(4, 4)
                 )
             )
-        }
         assertFailsWith<InvalidMineCountException> { builder.build() }
     }
 
     @Test
     fun `should validate randomMinesPositions generates unique positions`() {
-        val builder = Minesweeper.Builder().apply {
-            width(10)
-            height(10)
-            totalOfMines(10)
-            randomMinesPositions()
-        }
+        val builder = Minesweeper.Builder()
+            .width(10)
+            .height(10)
+            .totalOfMines(10)
+            .randomMinesPositions()
         val minesweeper = builder.build()
         val uniquePositions = minesweeper.currentBoard.distinct()
         assertTrue("Random mine positions should be unique") { uniquePositions.size == minesweeper.currentBoard.size }
