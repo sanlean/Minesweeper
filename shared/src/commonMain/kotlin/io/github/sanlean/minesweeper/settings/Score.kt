@@ -1,11 +1,14 @@
 package io.github.sanlean.minesweeper.settings
 
+import kotlinx.datetime.LocalDateTime
+
 data class Score(
-    val time: Double,
+    val time: Long,
     val name: String,
     val boardWidth: Int,
     val boardHeight: Int,
-    val totalOfMines: Int
+    val totalOfMines: Int,
+    val date: LocalDateTime
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
@@ -15,7 +18,8 @@ data class Score(
                 name == other.name &&
                 boardWidth == other.boardWidth &&
                 boardHeight == other.boardHeight &&
-                totalOfMines == other.totalOfMines
+                totalOfMines == other.totalOfMines &&
+                date == other.date
     }
 
     override fun hashCode(): Int {
@@ -24,6 +28,7 @@ data class Score(
         result = 31 * result + boardWidth
         result = 31 * result + boardHeight
         result = 31 * result + totalOfMines
+        result = 31 * result + date.hashCode()
         return result
     }
 }
