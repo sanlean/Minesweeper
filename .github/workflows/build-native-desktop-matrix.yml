@@ -34,7 +34,9 @@ jobs:
 
       - name: Generate camelCase name
         id: generateCamelCase
-        run: echo "camelShortName=${{ inputs.shortName | toJSON | fromJSON | map('toLower') | join('') }}" >> $GITHUB_ENV
+        run: |
+          camelShortName=$(echo "${{ inputs.shortName }}" | sed -E 's/(^|-)(\w)/\U\2/g' | sed 's/-//g')
+          echo "camelShortName=$camelShortName" >> $GITHUB_ENV
 
       - name: Build ${{ inputs.shortName }}${{ inputs.arch }}
         run: ./gradlew compileKotlin${{ inputs.shortName }}${{ inputs.arch }}
