@@ -1,0 +1,47 @@
+# .github/workflows/build-native-desktop.yml
+name: Build Native Desktop
+
+on:
+  workflow_call:
+    inputs:
+      operating-system:
+        description: 'Operating system for the build'
+        required: true
+        type: string
+      fullName:
+        description: 'Full name of the target'
+        required: true
+        type: string
+      upperShortName:
+        description: 'Short name of the target in upper case'
+        required: true
+        type: string
+      camelShortName:
+        description: 'Short name of the target in camel case'
+        required: true
+        type: string
+
+jobs:
+  build-native-desktop:
+    runs-on: ${{ inputs.operating-system }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build ${{ inputs.fullName }}
+        run: ./gradlew compileKotlin${{ inputs.upperShortName }}
+
+      - name: Link ${{ inputs.fullName }}
+        run: ./gradlew link${{ inputs.upperShortName }} && ./gradlew linkReleaseShared${{ inputs.upperShortName }}
+
+      - name: Generate ${{ inputs.fullName }} binaries
+        run: ./gradlew ${{ inputs.camelShortName }}Binaries

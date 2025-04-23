@@ -1,0 +1,49 @@
+name: Build Native Desktop Matrix
+
+on:
+  workflow_call:
+    inputs:
+      operating-system:
+        description: 'Operating system for the build'
+        required: true
+        type: string
+      arch:
+        description: 'Array of architectures'
+        required: true
+        type: array
+      shortName:
+        description: 'Short name of the target'
+        required: true
+        type: string
+
+jobs:
+  build-native-desktop:
+    runs-on: ${{ inputs.operating-system }}
+    strategy:
+      matrix:
+        arch: ${{ inputs.arch }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Generate camelCase name
+        id: generateCamelCase
+        run: echo "camelShortName=${{ inputs.shortName | toJSON | fromJSON | map('toLower') | join('') }}" >> $GITHUB_ENV
+
+      - name: Build ${{ inputs.shortName }}${{ matrix.arch }}
+        run: ./gradlew compileKotlin${{ inputs.shortName }}${{ matrix.arch }}
+
+      - name: Link ${{ inputs.shortName }}${{ matrix.arch }}
+        run: ./gradlew link${{ inputs.shortName }}${{ matrix.arch }} && ./gradlew linkReleaseShared${{ inputs.shortName }}${{ matrix.arch }}
+
+      - name: Generate ${{ inputs.shortName }}${{ matrix.arch }} binaries
+        run: ./gradlew ${{ env.camelShortName }}${{ matrix.arch }}Binaries
