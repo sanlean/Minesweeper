@@ -10,7 +10,7 @@ on:
       arch:
         description: 'Array of architectures'
         required: true
-        type: array
+        type: string
       shortName:
         description: 'Short name of the target'
         required: true
@@ -19,9 +19,6 @@ on:
 jobs:
   build-native-desktop:
     runs-on: ${{ inputs.operating-system }}
-    strategy:
-      matrix:
-        arch: ${{ inputs.arch }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -39,11 +36,11 @@ jobs:
         id: generateCamelCase
         run: echo "camelShortName=${{ inputs.shortName | toJSON | fromJSON | map('toLower') | join('') }}" >> $GITHUB_ENV
 
-      - name: Build ${{ inputs.shortName }}${{ matrix.arch }}
-        run: ./gradlew compileKotlin${{ inputs.shortName }}${{ matrix.arch }}
+      - name: Build ${{ inputs.shortName }}${{ inputs.arch }}
+        run: ./gradlew compileKotlin${{ inputs.shortName }}${{ inputs.arch }}
 
-      - name: Link ${{ inputs.shortName }}${{ matrix.arch }}
-        run: ./gradlew link${{ inputs.shortName }}${{ matrix.arch }} && ./gradlew linkReleaseShared${{ inputs.shortName }}${{ matrix.arch }}
+      - name: Link ${{ inputs.shortName }}${{ inputs.arch }}
+        run: ./gradlew link${{ inputs.shortName }}${{ inputs.arch }} && ./gradlew linkReleaseShared${{ inputs.shortName }}${{ inputs.arch }}
 
-      - name: Generate ${{ inputs.shortName }}${{ matrix.arch }} binaries
-        run: ./gradlew ${{ env.camelShortName }}${{ matrix.arch }}Binaries
+      - name: Generate ${{ inputs.shortName }}${{ inputs.arch }} binaries
+        run: ./gradlew ${{ env.camelShortName }}${{ inputs.arch }}Binaries
