@@ -171,7 +171,7 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.darwin)
                 implementation(libs.sqldelight.driver.native)
-                implementation("com.squareup.okio:okio:3.7.0")
+                implementation(libs.okio.client)
             }
         }
         val linuxX64Main by getting
@@ -183,12 +183,12 @@ kotlin {
             dependencies {
                 implementation(libs.ktor.client.cio)
                 implementation(libs.sqldelight.driver.native)
-                implementation("com.squareup.okio:okio:3.7.0")
+                implementation(libs.okio.client)
             }
         }
         val windowsMain by getting
         windowsMain.dependencies {
-            implementation("com.squareup.okio:okio:3.7.0")
+            implementation(libs.okio.client)
             implementation(libs.ktor.client.winhttp)
             implementation(libs.sqldelight.driver.native)
         }
