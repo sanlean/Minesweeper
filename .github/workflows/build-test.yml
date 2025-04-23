@@ -58,21 +58,21 @@ jobs:
         run: ./gradlew linkReleaseFrameworkIosArm64 linkReleaseFrameworkIosSimulatorArm64 linkReleaseFrameworkIosX64
 
   build-macos:
-    uses: your-repo/.github/workflows/build-native-desktop-matrix.yml@main
+    uses: sanlean/Minesweeper/.github/workflows/build-native-desktop-matrix.yml@main
     with:
       operating-system: macos-latest
       arch: [X64,Arm64]
       shortName: Macos
 
   build-linux:
-    uses: your-repo/.github/workflows/build-native-desktop-matrix.yml@main
+    uses: sanlean/Minesweeper/.github/workflows/build-native-desktop-matrix.yml@main
     with:
       operating-system: ubuntu-latest
       arch: [X64,Arm64]
       shortName: Linux
 
   build-windows:
-    uses: your-repo/.github/workflows/build-native-desktop.yml@main
+    uses: sanlean/Minesweeper/.github/workflows/build-native-desktop.yml@main
     with:
       operating-system: windows-latest
       fullName: Windows
