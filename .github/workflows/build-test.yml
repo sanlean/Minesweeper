@@ -244,3 +244,50 @@ jobs:
 
       - name: Test JVM
         run: ./gradlew jvmTestClasses
+
+  setup-and-publish:
+    runs-on: macos-latest
+    needs: [test-jvm,test-js,test-macos,test-windows,test-linux,test-android,test-ios]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v2
+        with:
+          distribution: 'adopt'
+          java-version: '17'
+
+      - name: Decode GNUPG_SECRING_GPG
+        env:
+          GNUPG_SECRING_GPG: ${{ secrets.GNUPG_SECRING_GPG }}
+        run: |
+          mkdir -p ~/.gnupg
+          echo "$GNUPG_SECRING_GPG" | base64 --decode > ~/.gnupg/secring.gpg
+
+      - name: Decode GRADLE_PROPERTIES
+        env:
+          GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
+        run: |
+          mkdir -p ~/.gradle
+          echo "$GRADLE_PROPERTIES" | base64 --decode > ~/.gradle/gradle.properties
+
+      - name: Publish to Maven Local
+        run: ./gradlew publishToMavenLocal
+
+      - name: Create Zip
+        run: |
+          zip -r maven-local.zip ~/.m2
+
+      - name: Upload Release Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: maven-local
+          path: maven-local.zip
+
+      - name: Publish Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: maven-local.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

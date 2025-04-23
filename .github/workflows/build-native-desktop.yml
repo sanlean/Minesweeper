@@ -40,8 +40,8 @@ jobs:
       - name: Build ${{ inputs.upperShortName }}${{ inputs.arch }}
         run: ./gradlew compileKotlin${{ inputs.upperShortName }}${{ inputs.arch }}
 
-      - name: Link ${{ inputs.upperShortName }}${{ inputs.arch }}
-        run: ./gradlew link${{ inputs.upperShortName }}${{ inputs.arch }} && ./gradlew linkReleaseShared${{ inputs.upperShortName }}${{ inputs.arch }}
-
-      - name: Generate ${{ inputs.upperShortName }}${{ inputs.arch }} binaries
-        run: ./gradlew ${{ inputs.lowerShortName }}${{ inputs.arch }}Binaries
+#      - name: Link ${{ inputs.upperShortName }}${{ inputs.arch }}
+#        run: ./gradlew link${{ inputs.upperShortName }}${{ inputs.arch }} && ./gradlew linkReleaseShared${{ inputs.upperShortName }}${{ inputs.arch }}
+#
+#      - name: Generate ${{ inputs.upperShortName }}${{ inputs.arch }} binaries
+#        run: ./gradlew ${{ inputs.lowerShortName }}${{ inputs.arch }}Binaries
