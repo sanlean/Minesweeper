@@ -1,14 +1,15 @@
-name: Build
+name: Test
 
 on:
   workflow_run:
-    workflows: ["Checkout and Cache"]
+    workflows: ["Build"]
     types:
       - completed
 
 jobs:
-  build-android:
+  test-android:
     runs-on: ubuntu-latest
+    needs: build-android
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -22,11 +23,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Android
-        run: ./gradlew assembleDebug && ./gradlew assembleRelease
+      - name: Test Android
+        run: ./gradlew testDebugUnitTest
 
-  build-ios:
+  test-ios:
     runs-on: macos-latest
+    needs: build-ios
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -40,11 +42,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build iOS Frameworks
-        run: ./gradlew linkReleaseFrameworkIosArm64 linkReleaseFrameworkIosSimulatorArm64 linkReleaseFrameworkIosX64
+      - name: Test iOS
+        run: ./gradlew iosArm64TestBinaries
 
-  build-macos:
+  test-macos:
     runs-on: macos-latest
+    needs: build-macos
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -58,26 +61,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build MacOS x64
-        run: ./gradlew compileKotlinMacosX64
+      - name: Test MacOS X64
+        run: ./gradlew macosX64TestBinaries && ./gradlew macosX64TestKlibrary
 
-      - name: Link MacOS x64
-        run: ./gradlew linkMacosX64 && ./gradlew linkDebugSharedMacosX64 && ./gradlew linkReleaseSharedMacosX64
+      - name: Test MacOS Arm64
+        run: ./gradlew macosArm64TestBinaries && ./gradlew macosArm64TestKlibrary
 
-      - name: Generate MacOS x64 binaries
-        run: ./gradlew macosX64Binaries
-
-      - name: Build MacOS Arm64
-        run: ./gradlew compileKotlinMacosArm64
-
-      - name: Link MacOS Arm64
-        run: ./gradlew linkMacosArm64 && ./gradlew linkReleaseSharedMacosArm64
-
-      - name: Generate MacOS Arm64 binaries
-        run: ./gradlew macosArm64Binaries
-
-  build-linux:
+  test-linux:
     runs-on: ubuntu-latest
+    needs: build-linux
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -91,26 +83,15 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Linux x64
-        run: ./gradlew compileKotlinLinuxX64
+      - name: Test Linux X64
+        run: ./gradlew linuxX64TestBinaries && ./gradlew linuxX64TestKlibrary
 
-      - name: Link Linux x64
-        run: ./gradlew linkLinuxX64 && ./gradlew linkReleaseSharedLinuxX64
+      - name: Test Linux Arm64
+        run: ./gradlew linuxArm64TestBinaries && ./gradlew linuxArm64TestKlibrary
 
-      - name: Generate Linux x64 binaries
-        run: ./gradlew linuxX64Binaries
-
-      - name: Build Linux Arm64
-        run: ./gradlew compileKotlinLinuxArm64
-
-      - name: Link Linux Arm64
-        run: ./gradlew linkLinuxArm64 && ./gradlew linkReleaseSharedLinuxArm64
-
-      - name: Generate Linux Arm64 binaries
-        run: ./gradlew linuxArm64Binaries
-
-  build-windows:
+  test-windows:
     runs-on: windows-latest
+    needs: build-windows
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -124,17 +105,12 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build Windows
-        run: ./gradlew compileKotlinWindows
+      - name: Test Windows
+        run: ./gradlew windowsTestBinaries && ./gradlew windowsTestKlibrary
 
-      - name: Link Linux Windows
-        run: ./gradlew linkWindows && ./gradlew linkReleaseSharedWindows
-
-      - name: Generate Linux Windows binaries
-        run: ./gradlew windowsBinaries
-
-  build-js:
+  test-js:
     runs-on: ubuntu-latest
+    needs: build-js
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -148,11 +124,21 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build JS
-        run: ./gradlew jsBrowserProductionWebpack
+      - name: Install Chromium
+        run: sudo apt-get update & sudo apt-get install -y chromium-browser
 
-  build-jvm:
+      - name: Test JS
+        run: ./gradlew jsTestClasses
+
+      - name: Test Node Package
+        run: ./gradlew jsTestPackageJson
+
+      - name: Browser test
+        run: ./gradlew jsBrowserRun
+
+  test-jvm:
     runs-on: ubuntu-latest
+    needs: build-jvm
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
@@ -166,5 +152,5 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build JVM
-        run: ./gradlew jvmJar
+      - name: Test JVM
+        run: ./gradlew jvmTestClasses
