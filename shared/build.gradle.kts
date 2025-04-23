@@ -267,3 +267,11 @@ mavenPublishing {
         }
     }
 }
+
+tasks.register("listTargets") {
+    doLast {
+        kotlin.targets.forEach { target ->
+            println("Target: ${target.name}")
+        }
+    }
+}
