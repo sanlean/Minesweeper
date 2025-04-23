@@ -8,7 +8,7 @@ on:
         required: true
         type: string
       arch:
-        description: 'Array of architectures'
+        description: 'Architecture'
         required: false
         type: string
         default: ''
@@ -17,7 +17,7 @@ on:
         required: true
         type: string
       lowerShortName:
-        description: 'Lower name of the target'
+        description: 'Short name of the target'
         required: true
         type: string
 
@@ -37,11 +37,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build ${{ inputs.upperShortName }}${{ inputs.arch }}
-        run: ./gradlew compileKotlin${{ inputs.upperShortName }}${{ inputs.arch }}
+      - name: Test ${{ inputs.upperShortName }}${{ inputs.arch }} Binaries
+        run: ./gradlew ${{ inputs.lowerShortName }}${{ inputs.arch }}TestBinaries
 
-      - name: Link ${{ inputs.upperShortName }}${{ inputs.arch }}
-        run: ./gradlew link${{ inputs.upperShortName }}${{ inputs.arch }} && ./gradlew linkReleaseShared${{ inputs.upperShortName }}${{ inputs.arch }}
-
-      - name: Generate ${{ inputs.upperShortName }}${{ inputs.arch }} binaries
-        run: ./gradlew ${{ inputs.lowerShortName }}${{ inputs.arch }}Binaries
+      - name: Test ${{ inputs.upperShortName }}${{ inputs.arch }} Klibrary
+        run: ./gradlew ${{ inputs.lowerShortName }}${{ inputs.arch }}TestKlibrary
