@@ -61,14 +61,14 @@ jobs:
     uses: sanlean/Minesweeper/.github/workflows/build-native-desktop-matrix.yml@main
     with:
       operating-system: macos-latest
-      arch: [X64,Arm64]
+      arch: ["X64","Arm64"]
       shortName: Macos
 
   build-linux:
     uses: sanlean/Minesweeper/.github/workflows/build-native-desktop-matrix.yml@main
     with:
       operating-system: ubuntu-latest
-      arch: [X64,Arm64]
+      arch: ["X64","Arm64"]
       shortName: Linux
 
   build-windows:
