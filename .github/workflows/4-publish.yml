@@ -5,6 +5,9 @@ on:
     tags:
       - "v*.*.*"
 
+permissions:
+  contents: write
+
 jobs:
   setup-and-publish:
     runs-on: macos-latest
@@ -51,7 +54,7 @@ jobs:
           path: maven-local.zip
 
       - name: Publish Release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: maven-local.zip
         env:
