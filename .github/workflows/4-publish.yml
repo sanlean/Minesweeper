@@ -50,19 +50,29 @@ jobs:
             -Psigning.password=$SIGNING_PASSWORD \
             -Psigning.keyId=$SIGNING_KEY_ID
 
+      - name: Publish to Maven Central
+        env:
+          SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
+          SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
+        run: |
+          ./gradlew publishToMavenCentral \
+            -Psigning.secretKeyRingFile=$HOME/.gnupg/secring.gpg \
+            -Psigning.password=$SIGNING_PASSWORD \
+            -Psigning.keyId=$SIGNING_KEY_ID
+
       - name: Create Zip
         run: |
-          zip -r maven-local.zip $HOME/.m2
+          zip -r "$(basename $GITHUB_REPOSITORY).zip" $HOME/.m2
 
       - name: Upload Release Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: maven-local
-          path: maven-local.zip
+          name: ${{ github.event.repository.name }}
+          path: ${{ github.event.repository.name }}.zip
 
       - name: Publish Release
         uses: softprops/action-gh-release@v2
         with:
-          files: maven-local.zip
+          files: ${{ github.event.repository.name }}.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
