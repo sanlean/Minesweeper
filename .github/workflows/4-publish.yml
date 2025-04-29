@@ -28,22 +28,24 @@ jobs:
         env:
           GNUPG_SECRING_GPG: ${{ secrets.GNUPG_SECRING_GPG }}
         run: |
-          mkdir -p ~/.gnupg
-          echo "$GNUPG_SECRING_GPG" | base64 --decode > ~/.gnupg/secring.gpg
+          mkdir -p $HOME/.gnupg
+          echo "$GNUPG_SECRING_GPG" | base64 --decode > $HOME/.gnupg/secring.gpg
+          ls -lah $HOME/.gnupg
 
       - name: Decode GRADLE_PROPERTIES
         env:
           GRADLE_PROPERTIES: ${{ secrets.GRADLE_PROPERTIES }}
         run: |
-          mkdir -p ~/.gradle
-          echo "$GRADLE_PROPERTIES" | base64 --decode > ~/.gradle/gradle.properties
+          mkdir -p $HOME/.gradle
+          echo "$GRADLE_PROPERTIES" | base64 --decode > $HOME/.gradle/gradle.properties
+          cat $HOME/.gradle/gradle.properties
 
-      - name: Publish to Maven Local
-        run: ./gradlew publishToMavenLocal
+#      - name: Publish to Maven Local
+#        run: ./gradlew publishToMavenLocal
 
       - name: Create Zip
         run: |
-          zip -r maven-local.zip ~/.m2
+          zip -r maven-local.zip $HOME/.m2
 
       - name: Upload Release Artifact
         uses: actions/upload-artifact@v4
