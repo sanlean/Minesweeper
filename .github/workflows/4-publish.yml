@@ -40,8 +40,8 @@ jobs:
           echo "$GRADLE_PROPERTIES" | base64 --decode > $HOME/.gradle/gradle.properties
           cat $HOME/.gradle/gradle.properties
 
-#      - name: Publish to Maven Local
-#        run: ./gradlew publishToMavenLocal
+      - name: Publish to Maven Local
+        run: ./gradlew publishToMavenLocal
 
       - name: Create Zip
         run: |
