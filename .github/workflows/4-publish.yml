@@ -55,7 +55,7 @@ jobs:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
         run: |
-          ./gradlew publishToMavenCentral \
+          ./gradlew publishAllPublicationsToMavenCentralRepository \
             -Psigning.secretKeyRingFile=$HOME/.gnupg/secring.gpg \
             -Psigning.password=$SIGNING_PASSWORD \
             -Psigning.keyId=$SIGNING_KEY_ID
